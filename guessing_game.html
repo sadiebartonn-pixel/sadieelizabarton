@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Number Guessing Game — Hiking</title>
+  <style>
+    :root{--bg:#f7fff8;--card:#ffffff;--accent:#2b9348;--muted:#5b6b68;--shadow:0 6px 18px rgba(18,50,59,0.08)}
+    html,body{height:100%;margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial;color:#082a2a;background:linear-gradient(180deg,#eaf7f2 0%,var(--bg) 100%)}
+    .wrap{max-width:920px;margin:28px auto;padding:20px}
+    header{display:flex;align-items:center;justify-content:space-between;gap:12px}
+    header h1{margin:0;font-size:1.25rem;color:var(--accent)}
+    .card{background:var(--card);padding:18px;border-radius:10px;box-shadow:var(--shadow);margin-top:18px}
+    .controls{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+    select,input[type=number]{padding:8px;border-radius:6px;border:1px solid #dbeee6}
+    .btn{background:#0099ff;color:white;border:none;padding:10px 12px;border-radius:8px;cursor:pointer}
+    .status{margin-top:12px;font-weight:600}
+    .muted{color:var(--muted)}
+    .history{margin-top:12px}
+    .guess-list{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+    .guess{background:#f1fff4;padding:8px 10px;border-radius:8px;border:1px solid #e1f5e5}
+    .success{color:var(--accent)}
+    .visually-hidden{position:absolute!important;height:1px;width:1px;overflow:hidden;clip:rect(1px,1px,1px,1px);white-space:nowrap}
+    .confetti{pointer-events:none;position:fixed;left:0;top:0;width:100%;height:100%;overflow:hidden}
+    footer{margin-top:18px;text-align:center;color:var(--muted);font-size:0.9rem}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>Number Guessing Game</h1>
+      <nav aria-label="navigation"><a href="index.html">← Back to Home</a></nav>
+    </header>
+
+    <section class="card" aria-labelledby="game-title">
+      <h2 id="game-title">Try to guess the secret number</h2>
+      <p class="muted">Choose a difficulty, then enter a guess. Hints will tell you higher or lower.</p>
+
+      <div class="controls" role="region" aria-label="game controls">
+        <label for="difficulty" class="muted">Difficulty</label>
+        <select id="difficulty">
+          <option value="10">Easy (1–10)</option>
+          <option value="100" selected>Normal (1–100)</option>
+          <option value="1000">Hard (1–1000)</option>
+        </select>
+
+        <label for="guess" class="muted">Your guess</label>
+        <input id="guess" type="number" inputmode="numeric" aria-label="Enter your guess" min="1" placeholder="Enter a number">
+
+        <button id="submit">Guess</button>
+        <button id="new">New Game</button>
+      </div>
+
+      <p id="message" class="status" aria-live="polite">Good luck — pick a difficulty and start guessing!</p>
+
+      <div class="history" aria-live="polite">
+        <strong>Guesses:</strong>
+        <div id="guessList" class="guess-list" aria-hidden="false"></div>
+      </div>
+
+      <div class="card" style="margin-top:12px;padding:12px;background:#fbfffb">
+        <p class="muted"><strong>Features:</strong> difficulty levels, guess history, helpful hints, accessible labels, and keyboard support (press Enter to submit).</p>
+      </div>
+    </section>
+
+    <div id="confetti" class="confetti" aria-hidden="true"></div>
+
+    
+  </div>
+
+  <script>
+    (function(){
+      const difficultyEl = document.getElementById('difficulty');
+      const guessEl = document.getElementById('guess');
+      const submitBtn = document.getElementById('submit');
+      const newBtn = document.getElementById('new');
+      const messageEl = document.getElementById('message');
+      const guessListEl = document.getElementById('guessList');
+      const confettiRoot = document.getElementById('confetti');
+
+      let max = parseInt(difficultyEl.value,10);
+      let secret = randomInt(1,max);
+      let attempts = 0;
+      let history = [];
+
+      function randomInt(min,max){return Math.floor(Math.random()*(max-min+1))+min}
+
+      function reset(){
+        max = parseInt(difficultyEl.value,10);
+        secret = randomInt(1,max);
+        attempts = 0;
+        history = [];
+        guessListEl.innerHTML = '';
+        messageEl.textContent = `New game: guessing between 1 and ${max}. Good luck!`;
+        guessEl.value = '';
+        guessEl.min = 1;
+        guessEl.max = max;
+        confettiRoot.innerHTML = '';
+        confettiRoot.style.pointerEvents = 'none';
+      }
+
+      function renderGuess(guess, result){
+        const el = document.createElement('div');
+        el.className = 'guess';
+        el.textContent = `${guess} → ${result}`;
+        guessListEl.prepend(el);
+      }
+
+      function celebrate(){
+        // simple CSS confetti using small DOM elements
+        const count = 40;
+        for(let i=0;i<count;i++){
+          const s = document.createElement('div');
+          const size = Math.random()*8+6;
+          s.style.position='absolute';
+          s.style.left = (Math.random()*100)+'%';
+          s.style.top = (-Math.random()*20)+'%';
+          s.style.width = size+'px';
+          s.style.height = size*0.6+'px';
+          s.style.background = `hsl(${Math.random()*90+120}deg 60% 60%)`;
+          s.style.opacity = String(0.9);
+          s.style.transform = `rotate(${Math.random()*360}deg)`;
+          s.style.borderRadius='2px';
+          s.style.willChange='transform, top';
+          s.animate([
+            {transform:'translateY(0) rotate(0deg)', top: s.style.top, opacity:1},
+            {transform:'translateY(100vh) rotate(720deg)', top:'120%', opacity:0}
+          ], {duration:1800+Math.random()*1200, easing:'cubic-bezier(.2,.8,.3,1)'});
+          confettiRoot.appendChild(s);
+        }
+      }
+
+      submitBtn.addEventListener('click', ()=>{
+        const val = Number(guessEl.value);
+        if(!val || val < 1 || val > max){
+          messageEl.textContent = `Please enter a number between 1 and ${max}.`;
+          return;
+        }
+        attempts++;
+        if(val === secret){
+          messageEl.innerHTML = `You got it in ${attempts} ${attempts===1?'try':'tries'}! The number was <span class="success">${secret}</span>.`;
+          renderGuess(val,'Correct');
+          celebrate();
+        } else if(val < secret){
+          messageEl.textContent = `Too low — try a higher number.`;
+          renderGuess(val,'Too low');
+        } else {
+          messageEl.textContent = `Too high — try a lower number.`;
+          renderGuess(val,'Too high');
+        }
+      });
+
+      // allow Enter to submit
+      guessEl.addEventListener('keydown',(e)=>{if(e.key==='Enter'){submitBtn.click()}});
+
+      // new game with confirmation if in-progress
+      newBtn.addEventListener('click', ()=>{
+        if(attempts>0 && !confirm('Start a new game? Your current progress will be lost.')) return;
+        reset();
+      });
+
+      // change difficulty resets
+      difficultyEl.addEventListener('change', reset);
+
+      // initialize
+      reset();
+    })();
+  </script>
+</body>
+</html>

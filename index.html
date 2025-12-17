@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Sadie Barton — Hiking</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+	<style>
+		body { background: #e6f2ff; font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial; color: #0b2f2a; }
+		.hero-section {
+			position: relative;
+			text-align: center;
+			padding: 80px 20px;
+			background-image: url('photos/about-me.jpg');
+			/* slightly zoom the background and focus on the top of the photo */
+			background-size: 120%;
+			background-position: center 18%;
+			min-height: 320px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+		/* Circular inset portrait */
+		.hero-portrait {
+			position: absolute;
+			bottom: -48px;
+			left: 50%;
+			transform: translateX(-50%);
+			width: 160px;
+			height: 160px;
+			border-radius: 50%;
+			overflow: hidden;
+			background-image: url('photos/about-me.jpg');
+			/* zoom in on the face inside the circular crop */
+			background-size: 180%;
+			background-position: center 34%;
+			box-shadow: 0 8px 24px rgba(3,10,14,0.25);
+			border: 4px solid rgba(255,255,255,0.95);
+			z-index: 2;
+		}
+		@media (max-width: 576px) {
+			.hero-portrait { width: 120px; height: 120px; bottom: -36px; }
+			.hero-section { padding: 64px 12px; }
+		}
+		.hero-section::before {
+			content: "";
+			position: absolute;
+			inset: 0;
+			background: linear-gradient(180deg, rgba(0,0,0,0.32), rgba(0,0,0,0.5));
+			z-index: 0;
+		}
+		.hero-section h1 { font-size: 3rem; font-weight: 700; color: #ffffff; margin-bottom: 10px; position: relative; z-index: 1; text-shadow: 0 2px 8px rgba(0,0,0,0.5); }
+		.hero-section p { font-size: 1.1rem; color: #e6f7ff; position: relative; z-index: 1; text-shadow: 0 1px 6px rgba(0,0,0,0.45); }
+		.nav-buttons { margin: 40px 0; display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
+		.nav-buttons a { display: inline-block; padding: 10px 20px; background: #0099ff; color: white; text-decoration: none; border-radius: 8px; font-weight: 500; }
+		.nav-buttons a:hover { background: #0066cc; }
+		.content-card { background: white; border-radius: 8px; padding: 30px; margin: 20px auto; max-width: 720px; box-shadow: 0 6px 20px rgba(3,10,14,0.06); }
+		.section-title { color: #0099ff; font-weight: 600; margin-top: 24px; margin-bottom: 12px; }
+		a { color: #0066cc; }
+		.social-links { margin-top: 30px; text-align: center; }
+		.social-links a { display: inline-block; margin: 0 10px; font-size: 1.2rem; }
+		footer { text-align: center; padding: 20px; color: #5b6b68; font-size: 0.9rem; margin-top: 40px; }
+	</style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
+	<div class="container">
+		<a class="navbar-brand" href="index.html"><strong>Sadie Barton</strong></a>
+		<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="navbarNav">
+			<ul class="navbar-nav ms-auto">
+				<li class="nav-item"><a class="nav-link" href="resume.html">Resume</a></li>
+				<li class="nav-item"><a class="nav-link" href="portfolio.html">Hiking</a></li>
+				<li class="nav-item"><a class="nav-link" href="guessing_game.html">Play Game</a></li>
+			</ul>
+		</div>
+	</div>
+</nav>
+
+<div class="hero-section" role="img" aria-label="Portrait photo behind name">
+		<div class="hero-portrait" aria-hidden="true"></div>
+	<h1>Sadie Barton</h1>
+</div>
+
+<main class="container">
+	<div class="content-card">
+		<h2>About Me</h2>
+		<p>Welcome to my site! I'm Sadie and I'm passionate about outdoor activities, particularly hiking and exploring beautiful landscapes. This site showcases my resume, hikes I've taken and a fun guessing game I created!</p>
+	</div>
+
+	<div class="nav-buttons" style="display:none;">
+		<a href="professional.html">Resume</a>
+		<a href="portfolio.html">Photography</a>
+		<a href="guessing_game.html">Play Game</a>
+	</div>
+
+	<div class="content-card">
+		<h2>Contact Information</h2>
+		<p><strong>Email:</strong> <a href="mailto:Sadiebartonn@gmail.com">Sadiebartonn@gmail.com</a></p>
+		<p><strong>Phone:</strong> <a href="tel:801-793-4222">801-793-4222</a></p>
+	</div>
+</main>
+
+<footer>
+	<p>© 2025 Sadie Barton. All rights reserved.</p>
+</footer>
+
+</body>
+</html>
